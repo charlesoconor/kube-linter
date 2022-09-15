@@ -6,7 +6,7 @@ on:
   # Uploading Code Scanning results requires write access. Ignore dependabot branches for auto-merge.
   push:
     branches-ignore: "dependabot/**"
-    tags: 
+    tags:
       - "*"
 
 env:
@@ -299,18 +299,22 @@ jobs:
 
       - name: Set permissions to files
         run: |
-          chmod +x linux/kube-linter
-          chmod +x darwin/kube-linter
+          chmod +x linux-amd64/kube-linter
+          chmod +x linux-arm64/kube-linter
+          chmod +x darwin-amd64/kube-linter
+          chmod +x darwin-arm64/kube-linter
 
       - name: create archives
         run: |
           for os in darwin linux windows; do
-            bin_name="kube-linter"
-            if [[ "${os}" == "windows" ]]; then
-              bin_name="kube-linter.exe"
-            fi
-            tar -C "${os}" -czf "kube-linter-${os}.tar.gz" "${bin_name}"
-            zip --junk-paths "kube-linter-${os}.zip" "${os}/${bin_name}"
+            for arc in amd64 arm64 ; do
+              bin_name="kube-linter"
+              if [[ "${os}" == "windows" ]]; then
+                bin_name="kube-linter.exe"
+              fi
+              tar -C "${os}" -czf "kube-linter-${os}-${arc}.tar.gz" "${bin_name}"
+              zip --junk-paths "kube-linter-${os}-${arc}.zip" "${os}_${arc}/${bin_name}"
+            done
           done
       # Workaround: https://github.com/sigstore/cosign-installer/issues/73
       - name: Write cosign private key to file
