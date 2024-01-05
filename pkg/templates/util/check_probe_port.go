@@ -10,7 +10,7 @@ import (
 
 var sentinel = struct{}{}
 
-func CheckProbePort(container *v1.Container, probe v1.Probe) []diagnostic.Diagnostic {
+func CheckProbePort(container *v1.Container, probe *v1.Probe) []diagnostic.Diagnostic {
 	if probe == nil {
 		return nil
 	}
@@ -40,10 +40,10 @@ func CheckProbePort(container *v1.Container, probe v1.Probe) []diagnostic.Diagno
 		}
 	}
 
-	if tcpProbe := container.LivenessProbe.ProbeHandler.GRPC; grpcProbe != nil {
+	if grpcProbe := container.LivenessProbe.ProbeHandler.GRPC; grpcProbe != nil {
 		if _, ok := ports[intstr.FromInt32(grpcProbe.Port)]; !ok {
 			return []diagnostic.Diagnostic{{
-				Message: fmt.Sprintf("container %q does not expose port %s for the Grpc check", container.Name, grpcProbe.Port.String()),
+				Message: fmt.Sprintf("container %q does not expose port %d for the Grpc check", container.Name, grpcProbe.Port),
 			}}
 		}
 	}

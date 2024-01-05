@@ -7,7 +7,7 @@ import (
 	"golang.stackrox.io/kube-linter/pkg/diagnostic"
 	"golang.stackrox.io/kube-linter/pkg/lintcontext/mocks"
 	"golang.stackrox.io/kube-linter/pkg/templates"
-	"golang.stackrox.io/kube-linter/pkg/templates/livenessport/internal/params"
+	"golang.stackrox.io/kube-linter/pkg/templates/readynessport/internal/params"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
