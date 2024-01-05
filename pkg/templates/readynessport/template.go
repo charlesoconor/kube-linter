@@ -1,4 +1,4 @@
-package livenessport
+package readynessport
 
 import (
 	"golang.stackrox.io/kube-linter/pkg/check"
@@ -6,18 +6,18 @@ import (
 	"golang.stackrox.io/kube-linter/pkg/diagnostic"
 	"golang.stackrox.io/kube-linter/pkg/objectkinds"
 	"golang.stackrox.io/kube-linter/pkg/templates"
-	"golang.stackrox.io/kube-linter/pkg/templates/livenessport/internal/params"
+	"golang.stackrox.io/kube-linter/pkg/templates/readynessport/internal/params"
 	"golang.stackrox.io/kube-linter/pkg/templates/util"
 	v1 "k8s.io/api/core/v1"
 )
 
-const templateKey = "liveness-http-port"
+const templateKey = "readnessport-http-port"
 
 func init() {
 	templates.Register(check.Template{
-		HumanName:   "Liveness Port Not Open",
+		HumanName:   "Readyness Port Not Open",
 		Key:         templateKey,
-		Description: "Flag containers with an HTTP liveness probe to not exposed port.",
+		Description: "Flag containers with an HTTP Readyness probe to not exposed port.",
 		SupportedObjectKinds: config.ObjectKindsDesc{
 			ObjectKinds: []string{objectkinds.DeploymentLike},
 		},
@@ -25,7 +25,7 @@ func init() {
 		ParseAndValidateParams: params.ParseAndValidate,
 		Instantiate: params.WrapInstantiateFunc(func(_ params.Params) (check.Func, error) {
 			return util.PerNonInitContainerCheck(func(container *v1.Container) []diagnostic.Diagnostic {
-				return util.CheckProbePort(container, container.LivenessProbe)
+				return util.CheckProbePort(container, container.ReadinessProbe)
 			}), nil
 		}),
 	})
